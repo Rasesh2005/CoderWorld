@@ -7,11 +7,9 @@ active
 {% endblock blogactive %}
 {% block body %}
 <div class="container">
-<h2>Coding Articles: </h2>
+<h2>Search Results for {{SearchTerm}} </h2>
 <div class="container">
 
-    <h2>Popular BlogPost: </h2>
-    <div>
     {% for post in allPosts %}
         <div
             class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
