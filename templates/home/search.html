@@ -7,10 +7,19 @@ active
 {% endblock blogactive %}
 {% block body %}
 <div class="container">
-<h2>Search Results for {{SearchTerm}} </h2>
-<div class="container">
+    <h3>Search Results for {{SearchTerm}} </h3>
+    <div class="container">
+        {%if allPosts|length < 1%}
+        <p class="text-center">Your search - {{SearchTerm}} - did not match </p>
+         Suggestions:
+        <ul>
 
-    {% for post in allPosts %}
+    <li>Make sure that all words are spelled correctly.</li>
+    <li>Try different keywords.</li>
+    <li>Try more general keywords.</li>
+        </ul>
+        {% endif %}
+        {% for post in allPosts %}
         <div
             class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
             <div class="col p-4 d-flex flex-column position-static">
@@ -23,7 +32,7 @@ active
                 </div>
             </div>
         </div>
-        {% endfor %}
+        {% endfor %}    
     </div>
 </div>
 {% endblock body %}

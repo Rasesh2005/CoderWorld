@@ -28,8 +28,12 @@ def contact(request):
 def search(request):
     # allPosts=Post.objects.all()
     query=request.GET['query']
-    allPosts=Post.objects.filter(title__icontains=query)
-
+    allPostsTitle=Post.objects.filter(title__icontains=query)
+    allPostsContent=Post.objects.filter(content__icontains=query)
+    allPostsAuthor=Post.objects.filter(author__icontains=query)
+    allPosts=allPostsTitle.union(allPostsContent,allPostsAuthor)
+    if len(query)>80:
+        allPosts=Post.objects.none()
     params={
         "allPosts":allPosts,
         "SearchTerm": query
