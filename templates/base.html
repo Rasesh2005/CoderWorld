@@ -37,110 +37,149 @@
         </li>
         <li class="nav-item {% block contactactive %}
           {% endblock contactactive %}">
-          <a class="nav-link" href="{% url 'home_app:contact' %}">Contact</a>
+          <a class="nav-link" href="{% url 'home_app:contact' %}">Contact Me</a>
         </li>
       </ul>
-      <form class="form-inline my-2 my-lg-0" action="/search" method="GET">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" name="query" id="query"
-          aria-label="Search">
-        <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
-      </form>
-      <a target='_blank' class="btn btn-success my-2 mx-2 my-sm-0" href="{% url 'admin:index'%}">Admin Panel</a>
-      <!-- Login Modal -->
-      <!-- Button trigger modal -->
-      <button type="button" class="btn btn-primary mr-1" data-toggle="modal" data-target="#exampleModal1">
-        Login
-      </button>
-      <!-- Modal -->
-      <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Log In Here: </h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+      <div class="ml-auto form-inline">
+        <form class="my-2 my-lg-0" action="/search" method="GET">
+          <input class="form-control mr-sm-2" type="search" placeholder="Search" name="query" id="query"
+            aria-label="Search">
+          <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+        {% if request.user.is_superuser %}
+        <a target='_blank' class="btn btn-success my-2 mx-2 my-sm-0" href="{% url 'admin:index'%}">Admin Panel</a>
+        {% endif %}{% if user.is_authenticated %}
+        <ul class="navbar-nav">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              Welcome, {{request.user}}
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href='{% url "home_app:handleLogout" %}'>Logout</a>
+              <a class="dropdown-item" href="#">Another action</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">Something else here</a>
             </div>
-            <div class="modal-body">
-              <form action='{% url "home_app:home" %}' method='POST'>
-                {% csrf_token %}
-                <div class="form-group">
-                  <label for="usernameLogin">Username</label>
-                  <input type="usernameLogin" class="form-control" id="usernameLogin" aria-describedby="emailHelp"
-                    placeholder="Enter username">
-                </div>
-                <div class="form-group">
-                  <label for="passLogin">Password</label>
-                  <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Enter Password">
-                </div>
-                <button type="submit" class="btn btn-primary">Login</button>
-              </form>
-            </div>
-            <div class="modal-footer">
-              Didn't Make an ID??<a href="#" data-toggle="modal" data-target="#exampleModal2">Sign Up Here</a>.
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-          </div>
-        </div>
+          </li>
+        </ul>
+        {% else %}
+        <!-- Button trigger Login modal -->
+        <button type="button" class="btn btn-primary mr-1" data-toggle="modal" data-target="#exampleModal1">
+          Login
+        </button>
+        <!-- Button trigger SignUp modal -->
+        <button type="button" class="btn btn-primary ml-1" data-toggle="modal" data-target="#exampleModal2">
+          Sign Up
+        </button>
+        {% endif %}
       </div>
 
-      <!-- Sign Up Modal -->
-      <!-- Button trigger modal -->
-      <button type="button" class="btn btn-primary ml-1" data-toggle="modal" data-target="#exampleModal2">
-        Sign Up
-      </button>
-      <!-- Modal -->
-      <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Sign Up Here: </h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
+
+
+    </div>
+  </nav>
+  <!-- Login Modal -->
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Log In Here: </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action='{% url "home_app:handleLogin" %}' method='POST'>
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input type="text" class="form-control" id="loginusername" name="username" aria-describedby="emailHelp"
+                placeholder="Enter username" required>
             </div>
-            <div class="modal-body">
-              <form action='{% url "home_app:home" %}' method='POST'>
-                {% csrf_token %}
-                <div class="form-group">
-                  <label for="usernameSignUp">Username</label>
-                  <input type="text" class="form-control" id="usernameSignUp" name='usernameSignIn' placeholder="Enter Username">
-                  <small id="emailHelp" class="form-text text-muted">Your unique username must be less than 10
-                    characters (only lowecase letters, numbers & underscores allowed) with no spaces </small>
-                </div>
-                <div class="form-group">
-                  <label for="fname">First Name</label>
-                  <input type="text" class="form-control" id="fname" name='fname' placeholder="Enter First Name">
-                </div>
-                <div class="form-group">
-                  <label for="lname">Last Name</label>
-                  <input type="text" class="form-control" id='lname' name='lname' placeholder="Enter Last Name">
-                </div>
-                <div class="form-group">
-                  <label for="email">Email address</label>
-                  <input type="text" class="form-control" id='email' name='email' placeholder="Enter email">
-                </div>
-                <div class="form-group">
-                  <label for="pass1SignUp">Password</label>
-                  <input type="password" class="form-control" id='pass1SignUp' name='pass1SignUp' placeholder="Password">
-                </div>
-                <div class="form-group">
-                  <label for="pass2SignUp">Confirm Password</label>
-                  <input type="password" class="form-control" id='pass2SignUp' name='pass2SignUp' placeholder="Confirm Password">
-                </div>
-                <button type="submit" class="btn btn-primary">Sign Up</button>
-              </form>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" class="form-control" id="loginpassword" name="password"
+                placeholder="Enter Password" required>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-          </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          Didn't Make an ID??<a href="#" data-toggle="modal" data-target="#exampleModal2">Sign Up Here</a>.
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
-  </nav>
+  </div>
+  <!-- Sign Up Modal -->
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Sign Up Here: </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action='{% url "home_app:handleSignup" %}' method='POST'>
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="usernameSignUp">Username</label>
+              <input type="text" class="form-control" id="usernameSignUp" name='username' placeholder="Enter Username"
+                required>
+              <small id="emailHelp" class="form-text text-muted">Your unique username must be less than 20
+                characters (only lowercase letters, numbers) with no spaces </small>
+            </div>
+            <div class="form-group">
+              <label for="fname">First Name</label>
+              <input type="text" class="form-control" id="fname" name='fname' placeholder="Enter First Name" required>
+            </div>
+            <div class="form-group">
+              <label for="lname">Last Name</label>
+              <input type="text" class="form-control" id='lname' name='lname' placeholder="Enter Last Name" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Email address</label>
+              <input type="text" class="form-control" id='email' name='email' placeholder="Enter email" required>
+            </div>
+            <div class="form-group">
+              <label for="pass1">Password</label>
+              <input type="password" class="form-control" id='pass1' name='pass1' placeholder="Password" required>
+            </div>
+            <div class="form-group">
+              <label for="pass2">Confirm Password</label>
+              <input type="password" class="form-control" id='pass2' name='pass2' placeholder="Confirm Password"
+                required>
+            </div>
+            <button type="submit" class="btn btn-primary">Sign Up</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  {% if messages %}
+  <div class="container-fluid">
+    {% for message in messages %}
+    <div class="alert alert-{{message.tags}} mb-0 alert-dismissible fade show" role="alert">
+      <strong>Message: </strong> {{message}}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
   {%block body%}{%endblock%}
 
 

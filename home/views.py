@@ -1,8 +1,10 @@
 from blog.models import Post
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from .models import Contact
 from django.contrib import messages
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate,login,logout
 # Create your views here.
 def home(request):
     return render(request,'home/home.html')
@@ -39,3 +41,48 @@ def search(request):
         "SearchTerm": query
     }
     return render(request,"home/search.html",context=params)
+
+
+def handleSignup(request):
+    if request.method=="POST":
+        username=request.POST['username']
+        fname=request.POST['fname']
+        lname=request.POST['lname']
+        email=request.POST['email']
+        pass1=request.POST['pass1']
+        pass2=request.POST['pass2']
+        user=User.objects.create_user(username,email,pass1,first_name=fname,last_name=lname)
+        user.save()
+        if pass1!=pass2:
+            messages.error(request,'Passwords do not match')
+            return redirect("home_app:home")
+        if len(username)>20:
+            messages.error(request,'Username Length Should be less than 20 characters')
+            return redirect("home_app:home")
+        if not username.isalnum():
+            messages.error(request,'Username Must be alphanumeric')
+            return redirect("home_app:home")
+        messages.success(request,'Your Account Has Been Successfuly created')
+        return redirect("home_app:home")
+    else:
+        return HttpResponse("404 - NOT FOUND")
+
+def handleLogin(request):
+    if request.method=="POST":
+        username=request.POST['username']
+        password=request.POST['password']
+        user=authenticate(username=username,password=password)
+        if user:
+            login(request,user)
+            messages.success(request,"Successfuly logged in")
+            return redirect('home_app:home')
+        else:
+            messages.error(request,"Invalid Credentials.. Please Try Again")
+            return redirect('home_app:home')
+    else:
+        return HttpResponse("404 - NOT FOUND")
+
+def handleLogout(request):
+    logout(request)
+    messages.success(request,"Successfuly logged out")
+    return redirect('home_app:home')
