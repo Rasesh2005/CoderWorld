@@ -4,6 +4,7 @@ Blog Post
 {% endblock title %}
 {% block body %}
 {% load static %}
+{% load humanize %}
 {% if post %}
 <div class="blog-post container my-3">
 
@@ -16,27 +17,83 @@ Blog Post
 <h1>Blog Not Found</h1>
 {% endif %}
 <div class="container">
-<h2>Comments</h2>
-<form action="{% url 'blog_app:postComment'%}" method="POST">
-{% csrf_token %}
-<div class="form-group">
-    <label for="exampleInputEmail1">Email address</label>
-    <textarea type="text" name='comment' class="form-control" placeholder="Enter Comment Here"></textarea>
-  </div>
-<input type="hidden" name='sno' value="{{post.sno}}">
-<button type="submit" class="btn btn-primary">Submit</button>
-</form>
 
-{% for comment in comments %}
-<div class="row my-3">
-<div class="col-md-1">
-<img class="rounded mx-auto d-block w-100" src="{% static 'img/user.png' %}" alt='image'>
-</div>
-<div class="col-md-11">
-<b>{{comment.user.username}}: </b> <span class="badge badge-secondary">at {{comment.timeStamp}}</span>
-<div>{{comment.comment}}</div>
-</div>
-</div>
-{% endfor %}
+  <h2>Comments ({{comments|length}})</h2>
+
+  {% if request.user.is_authenticated %}
+  <form action="{% url 'blog_app:postComment'%}" method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="comment">Type Your Comment</label>
+      <textarea type="text" name='comment' class="form-control" placeholder="Enter Comment Here"></textarea>
+    </div>
+    <input type="hidden" name='postSno' value="{{post.sno}}">
+    <input type="hidden" name='parentSno' value="">
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+  {% else %}
+  <b>Please Login or SignUp To Post A Comment</b> <br>
+  <!-- Button trigger Login modal -->
+  <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#exampleModal1">
+    Login
+  </button> or
+  <!-- Button trigger SignUp modal -->
+  <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#exampleModal2">
+    Sign Up
+  </button>
+  {% endif %}
+
+
+  {% for comment in comments %}
+  <div class="row my-3">
+    <div class="col-md-1">
+      <img class="w-100 d-block mx-auto rounded-circle img-fluid border border-dark rounded"
+        src="{% static 'img/user.png' %}" alt='image'>
+
+    </div>
+    <div class="col-md-11">
+      <b>{{comment.user.username}}: </b> <span class="badge badge-secondary">{{comment.timeStamp|naturaltime}}</span>
+      <div>{{comment.comment}}</div>
+
+      <div class="reply-mx-0">
+        <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse"
+          data-target="#replyBox{{comment.sno}}" aria-expanded="false" aria-controls="collapseExample">
+          Reply
+        </button>
+        <div class="replies my-3 bg-danger">
+        <br>
+        <br>
+        </div>
+        <div class="collapse" id="replyBox{{comment.sno}}">
+          <div class="card card-body">
+            <!-- ####################################### FORM FOR REPLY HERE ############################ -->
+            {% if request.user.is_authenticated %}
+            <form action="{% url 'blog_app:postComment'%}" method="POST">
+              {% csrf_token %}
+              <div class="form-group">
+                <label for="comment">Reply</label>
+                <textarea type="text" name='comment' class="form-control" placeholder="Enter Comment Here"></textarea>
+              </div>
+              <input type="hidden" name='parentSno' value="{{comment.sno}}">
+              <input type="hidden" name='postSno' value="{{post.sno}}">
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            {% else %}
+            <b>Please Login or SignUp To Post A Comment</b> <br>
+            <!-- Button trigger Login modal -->
+            <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#exampleModal1">
+              Login
+            </button> or
+            <!-- Button trigger SignUp modal -->
+            <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#exampleModal2">
+              Sign Up
+            </button>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
 </div>
 {% endblock body %}
