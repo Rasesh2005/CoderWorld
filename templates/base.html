@@ -44,7 +44,7 @@
         <form class="my-2 my-lg-0" action="/search" method="GET">
           <input class="form-control mr-sm-2" type="search" placeholder="Search" name="query" id="query"
             aria-label="Search">
-          <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
+          <button class="btn btn-success my-2 mr-2 my-sm-0" type="submit">Search</button>
         </form>
         {% if request.user.is_superuser %}
         <a target='_blank' class="btn btn-success my-2 mx-2 my-sm-0" href="{% url 'admin:index'%}">Admin Panel</a>
@@ -181,7 +181,6 @@
   </div>
   {% endif %}
   {%block body%}{%endblock%}
-
 
 
   <!-- Optional JavaScript -->

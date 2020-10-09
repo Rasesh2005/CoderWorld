@@ -21,3 +21,7 @@ urlpatterns = [
     path('', include('home.urls')),
     path('blog/', include('blog.urls')),
 ]
+
+admin.site.site_header = "CoderWorld Admin"
+admin.site.site_title = "CoderWorld Admin Portal"
+admin.site.index_title = "Welcome to CoderWorld Admin Panel"

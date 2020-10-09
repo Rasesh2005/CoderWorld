@@ -5,7 +5,7 @@ from .models import Contact
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
-# Create your views here.
+# Create HTML Views
 def home(request):
     return render(request,'home/home.html')
 def about(request):
@@ -26,7 +26,6 @@ def contact(request):
             except:
                 messages.error(request, 'Something Went Wrong, Plz Try Submitting Form Again..')
     return render(request,'home/contact.html')
-
 def search(request):
     # allPosts=Post.objects.all()
     query=request.GET['query']
@@ -42,7 +41,7 @@ def search(request):
     }
     return render(request,"home/search.html",context=params)
 
-
+# Authentication API
 def handleSignup(request):
     if request.method=="POST":
         username=request.POST['username']
@@ -66,7 +65,6 @@ def handleSignup(request):
         return redirect("home_app:home")
     else:
         return HttpResponse("404 - NOT FOUND")
-
 def handleLogin(request):
     if request.method=="POST":
         username=request.POST['username']
@@ -81,8 +79,8 @@ def handleLogin(request):
             return redirect('home_app:home')
     else:
         return HttpResponse("404 - NOT FOUND")
-
 def handleLogout(request):
     logout(request)
     messages.success(request,"Successfuly logged out")
     return redirect('home_app:home')
+
