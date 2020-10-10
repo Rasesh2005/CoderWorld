@@ -31,12 +31,12 @@ active
         </div>
     </div>
 </div>
-    {% endblock body %}
+{% endblock body %}
 
-    {% block js %}
-    <script>
-        Array.from(document.getElementsByClassName('preview')).forEach((element) => {
-            element.innerHTML = element.innerText
-        });
-    </script>
-    {% endblock js %}
+{% block js %}
+<script>
+    Array.from(document.getElementsByClassName('preview')).forEach((element) => {
+        element.innerHTML = element.innerText
+    });
+</script>
+{% endblock js %}
