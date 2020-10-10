@@ -7,25 +7,36 @@ active
 {% endblock blogactive %}
 {% block body %}
 <div class="container">
-<h2>Coding Articles: </h2>
-<div class="container">
+    <h2>Coding Articles: </h2>
+    <div class="container">
 
-    <h2>Popular BlogPost: </h2>
-    <div>
-    {% for post in allPosts %}
-        <div
-            class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-            <div class="col p-4 d-flex flex-column position-static">
-                <strong class="d-inline-block mb-2 text-primary">Article by {{post.author}}</strong>
-                <h3 class="mb-0"><a href="/blog/{{post.slug}}" class="text-dark">{{post.title}}</a></h3>
-                <div class="mb-1 text-muted">{{post.timeStamp}}</div>
-                <p class="card-text mb-auto">{{post.content|truncatechars:100}}</p>
-                <div class="my-2">
-                    <a href="/blog/{{post.slug}}" role="button" class="btn btn-primary col-md-2">Continue reading</a>
+        <h2>Popular BlogPost: </h2>
+        <div>
+            {% for post in allPosts %}
+            <div>
+                <div class="col p-4 d-flex flex-column position-static">
+                    <strong class="d-inline-block mb-2 text-primary">Article by {{post.author}}</strong>
+                    <h3 class="mb-0"><a href="/blog/{{post.slug}}" class="text-dark">{{post.title}}</a></h3>
+                    <div class="mb-1 text-muted">{{post.timeStamp}}</div>
+                    <p class="card-text mb-auto">
+                    <div class="preview">{{post.content|safe|truncatechars:100}}</div>
+                    </p>
+                    <div class="my-2">
+                        <a href="/blog/{{post.slug}}" role="button" class="btn btn-primary col-md-2">Continue
+                            reading</a>
+                    </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
 </div>
-{% endblock body %}
+    {% endblock body %}
+
+    {% block js %}
+    <script>
+        Array.from(document.getElementsByClassName('preview')).forEach((element) => {
+            element.innerHTML = element.innerText
+        });
+    </script>
+    {% endblock js %}

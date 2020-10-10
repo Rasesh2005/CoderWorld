@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.timezone import now
+
 # Create your models here.
 
 class Post(models.Model):
@@ -9,10 +10,11 @@ class Post(models.Model):
     content=models.TextField()
     author=models.CharField(max_length=25)
     slug=models.CharField(max_length=150,unique=True)
+    views=models.IntegerField(default=0)
     timeStamp=models.DateTimeField(blank=True)
 
     def __str__(self):
-        return "by "+self.author
+        return self.title + " by "+self.author
 
 class BlogComment(models.Model):
     sno=models.AutoField(primary_key=True)
