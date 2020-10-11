@@ -5,6 +5,8 @@ from .models import Contact
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
+import requests
+import json
 # Create HTML Views
 def home(request):
     return render(request,'home/home.html')
@@ -17,8 +19,22 @@ def contact(request):
         phone=request.POST['phone']
         content=request.POST['content']
         contact=Contact(name=name,email=email,phone=phone,content=content)
+
+        clientKey=request.POST['g-recaptcha-response']
+        secretKey='6LfuEtYZAAAAACWA4m9rlRnn8mGQBm-2Erbw2-PG'
+        captchaContent={
+            "secret": secretKey,
+            "response":clientKey
+        }
+        r=requests.post("https://www.google.com/recaptcha/api/siteverify",data=captchaContent)
+        response=json.loads(r.text)
+        success=response['success']
+        print(success)
+        if not success:
+            messages.error(request, 'You need to complete the reCaptcha to contact me')
+            return redirect("home_app:contact")
         if len(name)<2 or len(email)<3 or len(phone)<10 or len(content)<4:
-            messages.error(request, 'Something Went Wrong, Plz Try Submitting Form Again..')
+            messages.error(request, 'Please Follo wthe Rules of minimum length...')
         else:
             try:
                 contact.save()
@@ -52,6 +68,18 @@ def handleSignup(request):
         pass2=request.POST['pass2']
         user=User.objects.create_user(username,email,pass1,first_name=fname,last_name=lname)
         user.save()
+        clientKey=request.POST['g-recaptcha-response']
+        secretKey='6LfuEtYZAAAAACWA4m9rlRnn8mGQBm-2Erbw2-PG'
+        captchaContent={
+            "secret": secretKey,
+            "response":clientKey
+        }
+        r=requests.post("https://www.google.com/recaptcha/api/siteverify",data=captchaContent)
+        response=json.loads(r.text)
+        success=response['success']
+        if not success:
+            messages.error(request, 'You need to complete the reCaptcha to contact me')
+            return redirect("home_app:home")
         if pass1!=pass2:
             messages.error(request,'Passwords do not match')
             return redirect("home_app:home")
@@ -70,7 +98,18 @@ def handleLogin(request):
         username=request.POST['username']
         password=request.POST['password']
         user=authenticate(username=username,password=password)
-        if user:
+        clientKey=request.POST['g-recaptcha-response']
+        secretKey='6LfuEtYZAAAAACWA4m9rlRnn8mGQBm-2Erbw2-PG'
+        captchaContent={
+            "secret": secretKey,
+            "response":clientKey
+        }
+        r=requests.post("https://www.google.com/recaptcha/api/siteverify",data=captchaContent)
+        response=json.loads(r.text)
+        success=response['success']
+        if not success:
+            messages.error(request, 'You need to complete the reCaptcha to contact me')
+        elif user:
             login(request,user)
             messages.success(request,"Successfuly logged in")
             return redirect('home_app:home')
