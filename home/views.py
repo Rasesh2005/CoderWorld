@@ -109,6 +109,7 @@ def handleLogin(request):
         success=response['success']
         if not success:
             messages.error(request, 'You need to complete the reCaptcha to contact me')
+            return redirect('home_app:home')
         elif user:
             login(request,user)
             messages.success(request,"Successfuly logged in")

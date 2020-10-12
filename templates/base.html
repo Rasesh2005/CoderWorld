@@ -11,6 +11,8 @@
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
   <title>{%block title%}{%endblock%}</title>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  
 </head>
 
 <body>
@@ -56,8 +58,8 @@
               Welcome, {{request.user}}
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#">My Account</a>
-            <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">My Account</a>
+              <div class="dropdown-divider"></div>
               <a class="dropdown-item" href='{% url "home_app:handleLogout" %}'>Logout</a>
             </div>
           </li>
@@ -73,9 +75,6 @@
         </button>
         {% endif %}
       </div>
-
-
-
     </div>
   </nav>
   <!-- Login Modal -->
@@ -103,6 +102,7 @@
               <input type="password" class="form-control" id="loginpassword" name="password"
                 placeholder="Enter Password" required>
             </div>
+            <div class="g-recaptcha" data-sitekey="6LfuEtYZAAAAAEYmsaahloDlmILYgokvZt5gzNO9"></div>
             <button type="submit" class="btn btn-primary">Login</button>
           </form>
         </div>
@@ -156,6 +156,7 @@
               <input type="password" class="form-control" id='pass2' name='pass2' placeholder="Confirm Password"
                 required>
             </div>
+            <div class="g-recaptcha" data-sitekey="6LfuEtYZAAAAAEYmsaahloDlmILYgokvZt5gzNO9"></div>
             <button type="submit" class="btn btn-primary">Sign Up</button>
           </form>
         </div>
@@ -184,17 +185,17 @@
 
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
     crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+    integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
     crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-    integrity="sha384-JjSmVgyd0p3pXB1ribZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+    integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
     crossorigin="anonymous"></script>
-    {% block js %}
-    {% endblock js %}
+  {% block js %}
+  {% endblock js %}
 </body>
 
 </html>
