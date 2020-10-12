@@ -129,6 +129,7 @@ def handleLogin(request):
             return redirect('home_app:home')
     else:
         return HttpResponse("404 - NOT FOUND")
+
 @login_required
 def handleLogout(request):
     logout(request)
