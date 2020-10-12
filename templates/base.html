@@ -58,7 +58,7 @@
               Welcome, {{request.user}}
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#">My Account</a>
+              <a class="dropdown-item" href="{% url 'home_app:myAccount' %}">My Account</a>
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href='{% url "home_app:handleLogout" %}'>Logout</a>
             </div>

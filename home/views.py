@@ -1,3 +1,4 @@
+from django.http import request
 from blog.models import Post
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
@@ -5,6 +6,8 @@ from .models import Contact
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import check_password
 import requests
 import json
 # Create HTML Views
@@ -90,7 +93,14 @@ def handleSignup(request):
             messages.error(request,'Username Must be alphanumeric')
             return redirect("home_app:home")
         messages.success(request,'Your Account Has Been Successfuly created')
+        user=authenticate(username=username,password=pass1)
+        if user:
+            login(request,user)
+            messages.success(request,"Successfuly logged in")
+        else:
+            messages.error(request,"Something went wrong when trying to log in automatically")
         return redirect("home_app:home")
+
     else:
         return HttpResponse("404 - NOT FOUND")
 def handleLogin(request):
@@ -119,8 +129,34 @@ def handleLogin(request):
             return redirect('home_app:home')
     else:
         return HttpResponse("404 - NOT FOUND")
+@login_required
 def handleLogout(request):
     logout(request)
     messages.success(request,"Successfuly logged out")
     return redirect('home_app:home')
 
+@login_required
+def myAccount(request):
+    if request.method=="POST":
+        user=request.user
+        username=request.POST.get('userName')
+        if request.POST['btn']=='Update':
+            email=request.POST.get('userAddress')
+            user.username=username
+            user.email=email
+            user.save()
+        else:
+            password=request.POST.get('pass')
+            pass1=request.POST.get('pass1')
+            pass2=request.POST.get('pass2')
+          
+            matchcheck= check_password(password,user.password)
+            if not matchcheck:
+                messages.error(request,"The Current Passwords wa incorrect")
+            elif pass1!=pass2:
+                messages.error(request,"The New Passwords Do Not match")
+            else:
+                user.set_password(pass1)
+                user.save()
+                messages.success(request,"Password changed successfully!") 
+    return render(request,'profile/account.html',context={'user':request.user})
